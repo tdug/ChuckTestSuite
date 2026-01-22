@@ -35,6 +35,9 @@ jobs:
         run: |
           cd chuck/src
           make linux-all
+          mkdir ..bin
+          mv chuck ..bin/
+          echo "$(pwd)/..bin" >> $GITHUB_PATH
 
       - name: Checkout Chump
         if: runner.os == 'Linux'
@@ -53,10 +56,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - run: ls
-
       - name: Build and Install ChuckTestSuite
         run: |
+          ch ChuckTestSuite
           make
           make install
 
