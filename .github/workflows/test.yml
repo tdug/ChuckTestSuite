@@ -58,13 +58,17 @@ jobs:
           repository: ccrma/chump
           path: chump
 
-      - name: Cache Chumpinate
-        if: runner.os == 'Linux'
-        uses: actions/cache@v4
-        id: cache-chump
-        with:
-          path: chump/builddir-release
-          key: chump-${{ runner.os }}-${{ hashFiles('chump/**') }}
+      # TODO: Find reasonable to way to cache Chumpinate builds
+      # Since the makefile builds inside the source tree, caching the
+      # build directory causes issues when restoring from cache.
+      # For now, we just always build Chumpinate from scratch.
+      # - name: Cache Chumpinate
+      #   if: runner.os == 'Linux'
+      #   uses: actions/cache@v4
+      #   id: cache-chump
+      #   with:
+      #     path: chump/builddir-release
+      #     key: chump-${{ runner.os }}-${{ hashFiles('chump/**') }}
 
       - name: Build Chumpinate - Linux
         if: runner.os == 'Linux' && steps.cache-chump.outputs.cache-hit != 'true'
@@ -83,7 +87,7 @@ jobs:
 
       - name: Build and Install ChuckTestSuite
         run: |
-          ch ChuckTestSuite
+          cd ChuckTestSuite
           make
           make install
 
