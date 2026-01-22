@@ -1,0 +1,19 @@
+{
+    "arch": "all",
+    "files": [
+        {
+            "checksum": "f59fb9a06175bc472e29626cbf8b00689708c6add776baa734f506452b0624cb",
+            "file_type": "zip",
+            "local_dir": "./",
+            "url": "https://localhost/TestSuite/releases/0.0.1/TestSuite.zip"
+        }
+    ],
+    "language_version_min": {
+        "major": 5,
+        "mega": 1,
+        "minor": 5,
+        "patch": 0
+    },
+    "os": "any",
+    "version": "0.0.1"
+}

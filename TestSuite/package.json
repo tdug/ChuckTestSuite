@@ -1,0 +1,15 @@
+{
+    "authors": [
+        "Tom Dugovic"
+    ],
+    "description": "A small suite for testing.",
+    "homepage": "",
+    "keywords": [
+        "assert",
+        "test",
+        "suite"
+    ],
+    "license": "MIT",
+    "name": "TestSuite",
+    "repository": "https://github.com/tdug/chuck_test"
+}
