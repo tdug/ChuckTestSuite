@@ -17,46 +17,54 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - if: runner.os == 'Linux'
-        name: Install System Dependencies
+      - name: Install System Dependencies
+        if: runner.os == 'Linux'
         run: |
           sudo apt-get update
           sudo apt install build-essential bison flex libsndfile1-dev \
-            libasound2-dev libpulse-dev libjack-jackd2-dev
+            libasound2-dev libpulse-dev libjack-jackd2-dev meson ninja-build
       
-      - uses: actions/checkout@v6
-        with:
-          repository: ccrma/chuck
-          path: ../chuck
-
-      - if: runner.os == 'Linux'
-        name: Build and Install ChucK - Linux
-        run: |
-          cd ../chuck/src
-          make linux-all
-
-      - if: runner.os == 'Linux'
+      - name: Checkout Chuck
         uses: actions/checkout@v6
         with:
-          repository: ccrma/chumpinate
-          path: ../chumpinate
+          repository: ccrma/chuck
+          path: chuck
 
-      - if: runner.os == 'Linux'
-        name: Build and Install Chumpinate - Linux
+      - name: Build and Install ChucK - Linux
+        if: runner.os == 'Linux'
         run: |
-          cd ../chumpinate
-          make linux
-          make install
+          cd chuck/src
+          make linux-all
 
-      - uses: actions/checkout@v6
+      - name: Checkout Chump
+        if: runner.os == 'Linux'
+        uses: actions/checkout@v6
+        with:
+          repository: ccrma/chump
+          path: chump
+
+      - name: Build and Install Chumpinate - Linux
+        if: runner.os == 'Linux'
+        run: |
+          cd chump
+          make linux
+          sudo make install
+
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - run: ls
 
       - name: Build and Install ChuckTestSuite
         run: |
-          cd ChuckTestSuite
           make
           make install
 
       - name: Run Tests
         run: |
-          cd ChuckTestSuite
           chuck examples/TestRunner.ck
+
+      - name: Upload ZIP
+        uses: actions/upload-artifact@v6
+        with:
+          path: ChuckTestSuite.zip
