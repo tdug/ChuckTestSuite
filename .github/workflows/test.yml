@@ -1,0 +1,62 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - if: runner.os == 'Linux'
+        name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt install build-essential bison flex libsndfile1-dev \
+            libasound2-dev libpulse-dev libjack-jackd2-dev
+      
+      - uses: actions/checkout@v6
+        with:
+          repository: ccrma/chuck
+          path: ../chuck
+
+      - if: runner.os == 'Linux'
+        name: Build and Install ChucK - Linux
+        run: |
+          cd ../chuck/src
+          make linux-all
+
+      - if: runner.os == 'Linux'
+        uses: actions/checkout@v6
+        with:
+          repository: ccrma/chumpinate
+          path: ../chumpinate
+
+      - if: runner.os == 'Linux'
+        name: Build and Install Chumpinate - Linux
+        run: |
+          cd ../chumpinate
+          make linux
+          make install
+
+      - uses: actions/checkout@v6
+
+      - name: Build and Install ChuckTestSuite
+        run: |
+          cd ChuckTestSuite
+          make
+          make install
+
+      - name: Run Tests
+        run: |
+          cd ChuckTestSuite
+          chuck examples/TestRunner.ck
