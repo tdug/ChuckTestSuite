@@ -85,6 +85,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
+      - run: ls
+
       - name: Build and Install ChuckTestSuite
         run: |
           cd ChuckTestSuite
