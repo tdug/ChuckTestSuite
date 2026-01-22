@@ -99,6 +99,7 @@ jobs:
           chuck --silent examples/TestRunner.ck
 
       - name: Upload ZIP
+        if: startsWith(github.ref, 'refs/tags/')
         uses: actions/upload-artifact@v6
         with:
-          path: ChuckTestSuite.zip
+          path: ChuckTestSuite/TestSuite.zip
