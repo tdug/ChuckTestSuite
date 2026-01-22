@@ -1,0 +1,104 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Install System Dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt install build-essential bison flex libsndfile1-dev \
+            libasound2-dev libpulse-dev libjack-jackd2-dev meson ninja-build
+      
+      - name: Checkout Chuck
+        uses: actions/checkout@v6
+        with:
+          repository: ccrma/chuck
+          path: chuck
+
+      - name: Make ~/.local/bin directory
+        if: runner.os == 'Linux'
+        run: |
+          mkdir -p ~/.local/bin
+          echo ~/.local/bin >> $GITHUB_PATH
+
+      - name: Cache ChucK
+        if: runner.os == 'Linux'
+        uses: actions/cache@v4
+        id: cache-chuck
+        with:
+          path: ~/.local/bin/chuck
+          key: chuck-${{ runner.os }}-${{ hashFiles('chuck/**') }}
+
+      - name: Build ChucK - Linux
+        if: runner.os == 'Linux' && steps.cache-chuck.outputs.cache-hit != 'true'
+        run: |
+          cd chuck/src
+          make linux-all
+          mv chuck ~/.local/bin/
+
+      - name: Checkout Chump
+        if: runner.os == 'Linux'
+        uses: actions/checkout@v6
+        with:
+          repository: ccrma/chump
+          path: chump
+
+      - name: Cache Chumpinate
+        if: runner.os == 'Linux'
+        uses: actions/cache@v4
+        id: cache-chump
+        with:
+          path: chump/builddir-release
+          key:
+            chump-${{ runner.os }}-${{ hashFiles(
+              'chump/include/**',
+              'chump/scripts/**',
+              'chump/src/**',
+              'chump/VERSIONS',
+              'chump/makefile',
+              'chump/meson.build'
+            ) }}
+
+      - name: Build Chumpinate - Linux
+        if: runner.os == 'Linux' && steps.cache-chump.outputs.cache-hit != 'true'
+        run: |
+          cd chump
+          make linux
+
+      - name: Install Chumpinate - Linux
+        if: runner.os == 'Linux'
+        run: |
+          cd chump
+          sudo make install
+
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Build and Install ChuckTestSuite
+        run: |
+          make
+          make install
+
+      - name: Run Tests
+        run: |
+          chuck --silent examples/TestRunner.ck
+
+      - name: Upload ZIP
+        uses: actions/upload-artifact@v6
+        with:
+          path: ChuckTestSuite.zip
