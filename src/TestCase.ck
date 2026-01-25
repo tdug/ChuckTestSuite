@@ -1,5 +1,5 @@
 public class TestCase {
-    static string name;
+    string name;
 
     fun void setUp() {}
     fun void tearDown() {}

@@ -1,11 +1,5 @@
 @import "TestSuite";
 
-class Adder {
-    fun static int add(int a, int b) {
-        return a + b;
-    }
-}
-
 public class AdvanceTimeTestCase extends TestCase {
     "AdvanceTimeTestCase" => name;
 
@@ -15,10 +9,9 @@ public class AdvanceTimeTestCase extends TestCase {
     
     fun void testAdvanceTime() {
         now => time startTime;
-        1::samp => now;
-        now => time endTime;
-        endTime - startTime => dur elapsed;
-        Assert.equals(elapsed / samp, 1::samp / samp, "Time should have advanced by 1 sample");
+        1::ms => now;
+        now - startTime => dur elapsed;
+        Assert.approx(elapsed / ms, 1, 0.001, "Time should have advanced by 1 ms");
     }
 }
 

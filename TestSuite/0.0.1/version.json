@@ -2,7 +2,7 @@
     "arch": "all",
     "files": [
         {
-            "checksum": "340894166780047937c95c397ea3ec890294a760b43aca3c5d665a44a48ae19f",
+            "checksum": "36b6ba1e646283bb4f76afbdbf14d979a7cc0e926886da1e1d6a42829e05ab66",
             "file_type": "zip",
             "local_dir": "./",
             "url": "https://localhost/TestSuite/releases/0.0.1/TestSuite.zip"

@@ -9,9 +9,12 @@ public class TestRunner {
 
     fun void runAll() {
         <<< "=== RUNNING TESTS ===" >>>;
-        for (0 => int i; i < tests.size(); i++) {
-            spork ~ tests[i].run();
-            1::samp => now; // allow shred to execute
+        for (TestCase test : tests) {
+            spork ~ test.run() @=> Shred s;
+            1::ms => now;
+            while(s.running()) {
+                1::ms => now;
+            }
         }
         <<< "=== DONE ===" >>>;
     }
