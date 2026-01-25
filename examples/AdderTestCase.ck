@@ -21,5 +21,5 @@ public class AdderTestCase extends TestCase {
 
 /* Run a TestCase directly
 AdderTest adderTest;
-adderTest.test();
+adderTest.run();
 */

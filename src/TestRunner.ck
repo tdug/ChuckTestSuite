@@ -11,7 +11,7 @@ public class TestRunner {
         <<< "=== RUNNING TESTS ===" >>>;
         for (0 => int i; i < tests.size(); i++) {
             spork ~ tests[i].run();
-            1::ms => now; // allow shred to execute
+            1::samp => now; // allow shred to execute
         }
         <<< "=== DONE ===" >>>;
     }
