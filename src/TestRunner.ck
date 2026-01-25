@@ -12,9 +12,7 @@ public class TestRunner {
         for (TestCase test : tests) {
             spork ~ test.run() @=> Shred s;
             1::ms => now;
-            while(s.running()) {
-                1::ms => now;
-            }
+            while(!s.done()) { 1::ms => now; }
         }
         <<< "=== DONE ===" >>>;
     }
