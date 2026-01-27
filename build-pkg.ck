@@ -32,13 +32,15 @@ PackageVersion ver(pkgName, "0.0.1");
 "all" => ver.arch;
 
 // add our package's files
-ver.addFile("src/TestSuite.ck");
-ver.addFile("src/Assert.ck");
-ver.addFile("src/TestCase.ck");
-ver.addFile("src/TestRunner.ck");
+ver.addFile("TestSuite.ck");
+ver.addFile("src/Assert.ck", "src");
+ver.addFile("src/TestCase.ck", "src");
+ver.addFile("src/TestRunner.ck", "src");
 
 // add our example, this will be stored in the package's `_examples` directory.
-// ver.addExampleFile("examples/Main.ck");
+ver.addExampleFile("examples/AdderTestCase.ck");
+ver.addExampleFile("examples/AdvanceTimeTestCase.ck");
+ver.addExampleFile("examples/TestRunner.ck");
 
 // zip up all our files into TestSuite.zip, and tell Chumpinate what URL
 // this zip file will be located at.
